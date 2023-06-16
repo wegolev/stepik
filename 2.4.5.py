@@ -54,7 +54,7 @@ def build_vocabulary(tokenized_texts, max_size=1000000, max_doc_freq=0.8, min_co
 
 
 def main():
-    # with open('2.4.2.txt') as f:
+    # with open('2.4.5.txt') as f:
     #     data = f.readlines()
     data = open('2.4.2.txt', 'r')
     print(data)
