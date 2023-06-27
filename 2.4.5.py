@@ -64,7 +64,7 @@ def main():
     MAX_DF=1
     MIN_COUNT=0
 
-    print(*tokenized_data, sep='\n')
+    #print(*tokenized_data, sep='\n')
 
     return build_vocabulary(tokenized_data, MAX_SIZE, MAX_DF, MIN_COUNT)
     
