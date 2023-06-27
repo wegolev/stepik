@@ -3,7 +3,7 @@ import sys
 import re
 import numpy as np
 
-def tokenize_text_simple_regex(txt, min_token_size=4):
+def tokenize_text_simple_regex(txt, min_token_size=0): # min_token_size - мин размер токена!!!
     TOKEN_RE = re.compile(r'[\w\d]+')
     txt = txt.lower()
     all_tokens = TOKEN_RE.findall(txt)
@@ -56,15 +56,15 @@ def build_vocabulary(tokenized_texts, max_size=1000000, max_doc_freq=0.8, min_co
 def main():
     # with open('2.4.5.txt') as f:
     #     data = f.readlines()
-    data = open('2.4.2.txt', 'r')
+    data = open('2.4.5.txt', 'r')
     print(data)
     
     tokenized_data = tokenize_corpus(data)
     MAX_SIZE=1000000
     MAX_DF=1
-    MIN_COUNT=1
+    MIN_COUNT=0
 
-    print(tokenized_data, sep='\n')
+    print(*tokenized_data, sep='\n')
 
     return build_vocabulary(tokenized_data, MAX_SIZE, MAX_DF, MIN_COUNT)
     
