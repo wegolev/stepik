@@ -27,11 +27,7 @@ def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=Tru
         result = result.log1p() # Return the natural logarithm of one plus the input array, element-wise. Calculates log(1 + x).
         result = result.multiply(1 / word2freq)  # разделить каждый столбец на вес слова
 
-    result = result.tocsr()
-    mean = result.mean(axis=1)
-    mean_sqrt = np.subtract(result, mean)
-    print(mean)
-    print(mean_sqrt)
+        print(result)
 
     if scale:
         result = result.tocsc()
