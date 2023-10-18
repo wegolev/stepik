@@ -5,7 +5,7 @@ from torch.utils.data import Dataset
 
 
 def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=True):
-    assert mode in {'log(tf+1)idf', 'tfidf', 'idf', 'tf', 'bin'}
+    assert mode in {'pmi', 'log(tf+1)idf', 'tfidf', 'idf', 'tf', 'bin'}
 
     # считаем количество употреблений каждого слова в каждом документе
     result = scipy.sparse.dok_matrix((len(tokenized_texts), len(word2id)), dtype='float32')
@@ -37,8 +37,12 @@ def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=Tru
     
     elif mode == 'log(tf+1)idf':
         result = result.tocsr()
-        result = result.multiply(np.log1p(1 / result.sum(1) + 1))  # разделить каждую строку на её длину 
+        result = result.multiply(np.log1p(1 / result.sum(1) + 1))  # ln(TF+1) 
         result = result.multiply(1 / word2freq)  # разделить каждый столбец на вес слова
+
+    elif mode == 'pmi':
+        result = result.tocsr()
+        result = result.multiply(1 / result.sum(1))   
 
     if scale:
         result = result.tocsc()
