@@ -12,12 +12,16 @@ print()
 print(train_source['data'][0].strip())
 print()
 print('Метка', train_source['target'][0])
+print(50 * '=')
 
 train_tokenized = tokenize_corpus(train_source['data'][:10])
 test_tokenized = tokenize_corpus(test_source['data'][:2])
-print(len(train_tokenized))
+print('Длина train_tokenized', len(train_tokenized))
+print('train_tokenized as text:')
 print(' '.join(train_tokenized[0]))
+print('train_tokenized list:')
 print(train_tokenized[:1])
+print(50 * '=')
 
 MAX_DF = 0.8
 MIN_COUNT = 5
@@ -27,6 +31,7 @@ print('Количество уникальных токенов', UNIQUE_WORDS_N
 print(list(vocabulary.items())[:10])
 print(len(word_doc_freq))
 print(word_doc_freq)
+print(50 * '=')
 
 def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=True):
     assert mode in {'pmi', 'log(tf+1)idf', 'tfidf', 'idf', 'tf', 'bin'}
@@ -37,6 +42,9 @@ def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=Tru
         for token in text:
             if token in word2id:
                 result[text_i, word2id[token]] += 1
+
+    print(result.shape)
+    print(result.todense())
 
     # получаем бинарные вектора "встречается или нет"
     if mode == 'bin':
@@ -80,11 +88,11 @@ VECTORIZATION_MODE = 'pmi'
 train_vectors = vectorize_texts(train_tokenized, vocabulary, word_doc_freq, mode=VECTORIZATION_MODE)
 test_vectors = vectorize_texts(test_tokenized, vocabulary, word_doc_freq, mode=VECTORIZATION_MODE)
 
-print('Размерность матрицы признаков обучающей выборки', train_vectors.shape)
-print('Размерность матрицы признаков тестовой выборки', test_vectors.shape)
-print()
-print('Количество ненулевых элементов в обучающей выборке', train_vectors.nnz)
-print('Процент заполненности матрицы признаков {:.2f}%'.format(train_vectors.nnz * 100 / (train_vectors.shape[0] * train_vectors.shape[1])))
-print()
-print('Количество ненулевых элементов в тестовой выборке', test_vectors.nnz)
-print('Процент заполненности матрицы признаков {:.2f}%'.format(test_vectors.nnz * 100 / (test_vectors.shape[0] * test_vectors.shape[1])))
+# print('Размерность матрицы признаков обучающей выборки', train_vectors.shape)
+# print('Размерность матрицы признаков тестовой выборки', test_vectors.shape)
+# print()
+# print('Количество ненулевых элементов в обучающей выборке', train_vectors.nnz)
+# print('Процент заполненности матрицы признаков {:.2f}%'.format(train_vectors.nnz * 100 / (train_vectors.shape[0] * train_vectors.shape[1])))
+# print()
+# print('Количество ненулевых элементов в тестовой выборке', test_vectors.nnz)
+# print('Процент заполненности матрицы признаков {:.2f}%'.format(test_vectors.nnz * 100 / (test_vectors.shape[0] * test_vectors.shape[1])))
