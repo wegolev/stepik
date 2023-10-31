@@ -1,5 +1,13 @@
-# реализация алгоритма взвешивания признаков  с помощью точечной взаимной информации (PMI) на python
-# Вот пример реализации алгоритма взвешивания признаков с использованием точечной взаимной информации (PMI) на языке Python:
+# Пример реализации алгоритма взвешивания признаков 
+# с использованием точечной взаимной информации (PMI) на языке Python:
+# Этот код реализует алгоритм взвешивания признаков 
+# с использованием точечной взаимной информации (PMI) 
+# на основе матрицы признаков feature_matrix. 
+# Алгоритм сначала подсчитывает количество документов, 
+# содержащих каждый признак, 
+# а также количество взаимного вхождения пар признаков. 
+# Затем он вычисляет PMI для каждой пары признаков 
+# и возвращает словарь с PMI-оценками.
 
 import math
 from collections import defaultdict
@@ -43,6 +51,18 @@ pmi_scores = calculate_pmi(feature_matrix)
 for (feature, other_feature), pmi in pmi_scores.items():
     print(f"PMI({feature}, {other_feature}) = {pmi}")
     
-# Этот код реализует алгоритм взвешивания признаков с использованием точечной взаимной информации (PMI) на основе матрицы признаков feature_matrix. Алгоритм сначала подсчитывает количество документов, содержащих каждый признак, а также количество взаимного вхождения пар признаков. Затем он вычисляет PMI для каждой пары признаков и возвращает словарь с PMI-оценками.
 
-# Приведенный пример иллюстрирует использование алгоритма на простом наборе данных. Вы можете изменить feature_matrix на свои данные для выполнения алгоритма на своем наборе признаков.
+# ========================================================================
+# https://www.listendata.com/2022/06/pointwise-mutual-information-pmi.html
+
+from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
+from nltk.tokenize import word_tokenize
+import nltk
+nltk.download('punkt')
+
+text = "this is a foo bar bar black sheep  foo bar bar black sheep foo bar bar black sheep shep bar bar black sentence"
+
+bigram_measures = BigramAssocMeasures()
+finder = BigramCollocationFinder.from_words(word_tokenize(text))
+for i in finder.score_ngrams(bigram_measures.pmi):
+    print(i)

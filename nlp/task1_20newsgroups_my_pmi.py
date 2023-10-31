@@ -4,26 +4,6 @@ import collections
 from sklearn.datasets import fetch_20newsgroups
 from dlnlputils_my.data import tokenize_corpus
 
-train_source = fetch_20newsgroups(subset='train')
-test_source = fetch_20newsgroups(subset='test')
-
-# print('Количество обучающих текстов', len(train_source['data']))
-# print('Количество тестовых текстов', len(test_source['data']))
-# print()
-# print(train_source['data'][0].strip())
-# print()
-# print('Метка', train_source['target'][0])
-# print(50 * '=')
-
-train_tokenized = tokenize_corpus(train_source['data'][:10])
-test_tokenized = tokenize_corpus(test_source['data'][:2])
-print('Длина train_tokenized', len(train_tokenized))
-# print('train_tokenized as text:')
-# print(' '.join(train_tokenized[0]))
-print('train_tokenized:')
-print(train_tokenized[:1])
-print(50 * '=')
-
 def build_vocabulary(tokenized_texts, max_size=1000000, max_doc_freq=0.8, min_count=5, pad_word=None):
     word_counts = collections.defaultdict(int)
     doc_n = 0
@@ -39,15 +19,18 @@ def build_vocabulary(tokenized_texts, max_size=1000000, max_doc_freq=0.8, min_co
     # убрать слишком редкие и слишком частые слова
     word_counts = {word: cnt for word, cnt in word_counts.items()
                    if cnt >= min_count and cnt / doc_n <= max_doc_freq}
+    # print(word_counts)
 
     # отсортировать слова по убыванию частоты
     sorted_word_counts = sorted(word_counts.items(),
                                 reverse=True,
                                 key=lambda pair: pair[1])
+    # print(sorted_word_counts)
 
     # добавим несуществующее слово с индексом 0 для удобства пакетной обработки
     if pad_word is not None:
         sorted_word_counts = [(pad_word, 0)] + sorted_word_counts
+    # print(sorted_word_counts)
 
     # если у нас по прежнему слишком много слов, оставить только max_size самых частотных
     if len(word_counts) > max_size:
@@ -67,6 +50,7 @@ def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=Tru
     # считаем количество употреблений каждого слова в каждом документе
     result = scipy.sparse.dok_matrix((len(tokenized_texts), len(word2id)), dtype='float32')
     for text_i, text in enumerate(tokenized_texts):
+        # print(text)
         for token in text:
             if token in word2id:
                 result[text_i, word2id[token]] += 1
@@ -111,6 +95,27 @@ def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=Tru
     
     return result.tocsr()
 
+
+train_source = fetch_20newsgroups(subset='train')
+test_source = fetch_20newsgroups(subset='test')
+
+# print('Количество обучающих текстов', len(train_source['data']))
+# print('Количество тестовых текстов', len(test_source['data']))
+# print()
+# print(train_source['data'][0].strip())
+# print()
+# print('Метка', train_source['target'][0])
+# print(50 * '=')
+
+train_tokenized = tokenize_corpus(train_source['data'][:10])
+test_tokenized = tokenize_corpus(test_source['data'][:2])
+print('Длина train_tokenized', len(train_tokenized))
+# print('train_tokenized as text:')
+# print(' '.join(train_tokenized[0]))
+print('train_tokenized:')
+print(train_tokenized[:1])
+print(50 * '=')
+
 MAX_DF = 0.8
 MIN_COUNT = 5
 vocabulary, word_doc_freq = build_vocabulary(train_tokenized, max_doc_freq=MAX_DF, min_count=MIN_COUNT)
@@ -119,7 +124,7 @@ print('Количество уникальных токенов', UNIQUE_WORDS_N
 print(list(vocabulary.items())[:10])
 print(len(word_doc_freq))
 print(word_doc_freq)
-print(50 * '=')
+print(50 * '+')
 
 VECTORIZATION_MODE = 'pmi'
 train_vectors = vectorize_texts(train_tokenized, vocabulary, word_doc_freq, mode=VECTORIZATION_MODE)
