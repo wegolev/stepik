@@ -40,10 +40,16 @@ def vectorize_texts(tokenized_texts, word2id, word2freq, mode='tfidf', scale=Tru
         result = result.multiply(np.log1p(1 / result.sum(1) + 1))  # ln(TF+1) 
         result = result.multiply(1 / word2freq)  # разделить каждый столбец на вес слова
 
-    elif mode == 'pmi':
-        result = result.tocsr()
-        result = result.multiply(1 / result.sum(1))   
+    # elif mode == 'pmi':
+    #     result = result.tocsr()
+    #     result = result.multiply(1 / result.sum(1))   
 
+    # Исходный код
+    # if scale:
+    #     result = result.tocsc()
+    #     result -= result.min()
+    #     result /= (result.max() + 1e-6)
+    
     if scale:
         result = result.tocsc()
         result -= result.min()
